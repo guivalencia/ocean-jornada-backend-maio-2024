@@ -4,5 +4,16 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
-  }
+  },
+  "name": "ocean-jornada-backend-maio-2024",
+  "description": "",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
