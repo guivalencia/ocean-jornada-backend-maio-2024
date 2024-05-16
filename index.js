@@ -1,5 +1,5 @@
 const express = require('express')
-const { MongoClient, ConnectionClosedEvent } = require('mongodb')
+const { MongoClient, ConnectionClosedEvent, ObjectId } = require('mongodb')
 
 const dbUrl = 'mongodb+srv://admin:zMo3skPjVYGPJrPY@cluster0.bn9bztr.mongodb.net'
 const dbName = 'ocean-jornada-backend-maio-2024'
@@ -38,12 +38,15 @@ async function main() {
   })
 
   // Endpoint de Read By ID [GET] /item/:id
-  app.get('/item/:id', function (req, res) {
+  app.get('/item/:id', async function (req, res) {
     // Acessamos o parâmetro de rota ID
     const id = req.params.id
 
     // Acessamos o item na lista usando o ID - 1
-    const item = itens[id - 1]
+    // const item = itens[id - 1]
+
+    //Acessamos o item na collection usando o ID
+    const item = await collection.findOne({ _id: new ObjectId(id)})
 
     // Enviamos o item encontrado como resposta
     res.send(item)
@@ -62,7 +65,10 @@ async function main() {
     const novoItem = body.nome
 
     // Adicionar o novo item na lista
-    itens.push(novoItem)
+    // itens.push(novoItem)
+
+    // Adicionar o novo item na collection
+    collection.insertOne({ nome: novoItem })
 
     // Enviar uma mensagem de sucesso
     res.send('Item adicionado com sucesso: ' + novoItem)
@@ -78,7 +84,13 @@ async function main() {
     const atualizarItem = body.nome
 
     //Atualizar na lista o item recebido
-    itens[id - 1] = atualizarItem
+    // itens[id - 1] = atualizarItem
+
+    //Atualizar na collection o item recebido
+    collection.updateOne(
+      { _id: new ObjectId(id) },
+      { $set: { nome: atualizarItem }}
+    )
 
     res.send('Item atualizado com sucesso: ' + id + ', ' + atualizarItem)
   })
